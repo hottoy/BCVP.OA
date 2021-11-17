@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\BCVP.Api\bin\Debug\</OutputPath>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>..\BCVP\bin\Release\</OutputPath>
+	</PropertyGroup>
+	 
+
+	<ItemGroup>
+		<ProjectReference Include="..\BCVP.IServices\BCVP.IServices.csproj" />
+		<ProjectReference Include="..\BCVP.Repository\BCVP.Repository.csproj" />
+	</ItemGroup>
+
+</Project>

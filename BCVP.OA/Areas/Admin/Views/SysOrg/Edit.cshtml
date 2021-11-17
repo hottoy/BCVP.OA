@@ -1,0 +1,197 @@
+﻿@model BCVP.Model.Models.OAModel.SysOrg
+
+@{
+    ViewData["Title"] = "修改";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上级机构</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="oldNames" id="oldNames" lay-verify="required" placeholder="所属机构名称" readonly="readonly" autocomplete="off" value='@Context.Request.Query["pName"]' class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">机构名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Names" id="Names" lay-verify="required" placeholder="请输入机构名称" autocomplete="off" class="layui-input" value="">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">机构属性</label>
+                    <div class="layui-input-block">
+                        <select lay-verify="required" name="Attribut" id="Attribut" lay-search="">
+                            <option value="">直接选择或搜索选择</option>
+                            <option value="1">集团</option>
+                            <option value="2">分公司</option>
+                            <option value="3">子公司</option>
+                            <option value="4">机构</option>
+                            <option value="5">部门</option>
+                            <option value="6">小组</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+
+                        <input type="checkbox" name="IsEnabled" id="IsEnabled" value='1' checked="checked" lay-skin="switch" lay-filter="IsEnabled" lay-text="启用|停用">
+
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <textarea name="Remark" id="Remark" class="layui-textarea" placeholder="说明"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="saveInfo">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+layui.use(['form', 'layedit'], function () {
+    var $ = layui.jquery,
+        form = layui.form,
+        layer = layui.layer,
+        layedit = layui.layedit;
+
+
+    //表单初始赋值
+    form.val('component-form-group', {
+        "Icon1": '',
+        "IsTarget": ''
+    });
+
+  //自定义验证规则
+  form.verify({
+            title: function (value) {
+                if (value.length < 2) {
+                    return '标题至少得2个字符啊';
+                }
+            }
+            , pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+            , content: function (value) {
+                layedit.sync(editIndex);
+            }
+        });
+
+
+    ///* 监听是否是菜单 */
+    form.on('switch(IsMenu)', function (obj) {
+        if (this.checked) { //this.checked就是值
+            obj.elem.value = 1;
+        }
+        else { obj.elem.value = 0; }
+
+    });
+
+    ///* 监听状态 */
+    form.on('switch(IsEnabled)', function (obje) {
+        if (this.checked) { //this.checked就是值
+            obje.elem.value = 1;
+        }
+        else {
+            obje.elem.value = 0;
+        }
+    });
+
+
+    //监听提交
+    form.on('submit(saveInfo)', function (data) {
+        var moduleId =@Context.Request.Query["id"];
+        var typeId=@Context.Request.Query["typeId"]
+        data.field.Code = '@Context.Request.Query["code"]';
+        data.field.ModuleID = moduleId;
+        data.field.ParentId = '@Context.Request.Query["pId"]';
+        data.field["IsTarget"] = $("select[name='IsTarget']").val();
+        data.field.IsMenu = $("input[id='IsMenu']").val();
+        data.field.IsEnabled = $("input[id='IsEnabled']").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("InsertOrEdit")",
+            data: { info: data.field, moduleId: moduleId, typeId: typeId},
+                //dataType: "html",
+                dataType: 'json',
+                success: function (res)
+                {
+                    if (res.count> 0)
+                    {
+                        layer.alert('保存成功', { icon: 6 }, function () {
+                           //刷新父
+                            window.parent.location.reload();
+                           // 获得frame索引
+                           var index = parent.layer.getFrameIndex(window.name);
+                           //关闭当前frame
+                           parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.msg('菜单名称已经存在，修改失败！', { icon: 5 });
+                    }
+                }
+            });
+            return false;
+        });
+
+     //监听选中图标
+     $("#icon").click(function (event) {
+           layer.open({
+                type: 2,
+                title: '选择图片',
+                maxmin: false,
+                shade: [0.5, '#000'],
+                //配置遮罩层颜色和透明度
+                shadeClose: true,
+                //是否允许点击遮罩层关闭弹窗 true /false
+                //closeBtn:2,//设置子页面关闭按钮状态效果
+                // time:1000,  设置自动关闭窗口时间 1秒=1000；
+                shift: 5,
+                //打开效果：0-6 。0放大，1从上到下，2下到上，3左到右放大，4翻滚效果；5渐变；6抖窗口
+                area: ['450px', '350px'],
+                //设置弹出框的宽高 yes是代表有滚动条 no代表无滚动条
+                content: ['@Url.Action("IconBrowser")?iconId=0', 'yes'],
+                //btn: ["确定", '关闭'],//设置子页面是否显示 按钮
+                success: function (layero, index) { },
+                // 确定的操作//点击确定按钮后成功事件返回结果处理
+                btn1: function (index, layero) {
+                    //这一行是关键，获取的事子页面的内容，所以可以在子页面将数据绑定在隐藏区域，从而在这个地Model获取
+                    var obj = layero.find("iframe")[0].contentWindow;
+                    //获取子窗体对象
+                    //console.log(obj.checkedList.toString());
+                    //$("#imgClass").val(obj.checkedList.toString());
+                    //$("#imgClass").attr("class", "layui-icon layui-icon-light");
+                },
+                cancel: function (index, layero) {
+                    // 取消的操作
+                    layer.close(index);
+                }
+            });
+
+
+        });
+
+
+
+    });</script>
+
+
+
+
