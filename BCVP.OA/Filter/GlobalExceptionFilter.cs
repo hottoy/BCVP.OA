@@ -40,7 +40,7 @@ namespace BCVP.OA.Filter
 
         public void OnException(ExceptionContext context)
         {
-            string ip = _session.GetString("Ip");
+            //string ip = _session.GetString("Ip");
             var json = new MessageModel<string>();
 
             json.msg = context.Exception.Message;//错误信息
