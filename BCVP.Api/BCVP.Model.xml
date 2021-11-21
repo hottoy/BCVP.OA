@@ -626,6 +626,76 @@
             修改时间
             </summary>
         </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysLogException">
+            <summary>
+            系统异常信息
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Exc_ID">
+            <summary>
+            主键 用户登录日志
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Exc_Requ_Param">
+            <summary>
+            请求参数
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Exc_Name">
+            <summary>
+            异常名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Exc_Message">
+            <summary>
+            异常信息
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Oper_User_ID">
+            <summary>
+            操作者
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Oper_User_Name">
+            <summary>
+            操作人
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.ControllerName">
+            <summary>
+            控制器名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Oper_Method">
+            <summary>
+            方法名
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Oper_URL">
+            <summary>
+            请求URL
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Oper_IP">
+            <summary>
+            请求IP
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Oper_CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Oper_Versions">
+            <summary>
+            版本号
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogException.Login_Src">
+            <summary>
+            登录来源（0:PC 1:webapp 2:App 3:微信 4:IOS）
+            </summary>
+        </member>
         <member name="T:BCVP.Model.Models.OAModel.SysLogUserLogin">
             <summary>
             用户登录日志

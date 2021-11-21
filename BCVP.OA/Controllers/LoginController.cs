@@ -1,13 +1,16 @@
 ﻿using BCVP.Common.Helper;
 using BCVP.IServices.IOAServices;
 using BCVP.Model;
+using BCVP.Model.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp.Serialization.Json;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using static BCVP.Model.Enums;
 
@@ -33,7 +36,6 @@ namespace BCVP.OA.Controllers
 
         public async Task<JsonResult> CheckLogin(string account, string password)
         {
-     
             string ipd = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
             JsonResponse result = new JsonResponse();
             string strHostName = System.Net.Dns.GetHostName();
@@ -70,11 +72,40 @@ namespace BCVP.OA.Controllers
                                                       AllowRefresh = false,
                                                       RedirectUri = "/Home/Index",
                                                   });
+                    //创建身份证这个证件的携带者：我们叫这个证件携带者为“证件当事人”
+                    var principal = new ClaimsPrincipal(identity);
+
+                    Task.Run(async () =>
+                    {
+                        //生成 Cookie 并保存到硬盘中，指定 Cookie 的过期时间
+                        await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties()
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
+                            AllowRefresh = true
+                        });
+                    }).Wait();
+
+                    LoginInfoViewModels loginInfo = new LoginInfoViewModels();
                     result.LogID = userInfo.FirstOrDefault().UserID;
                     result.msg = "登录成功！";
-                    HttpContext.Session.SetString("Ip", IPOK);
-                    //取值
-                    ViewBag.Code = HttpContext.Session.GetString("Ip");
+                    loginInfo.uLoginUserId = userInfo.FirstOrDefault().UserID;
+                    loginInfo.uLoginUserAccount = account;
+                    loginInfo.uLoginName = userInfo.FirstOrDefault().UserName;
+                    loginInfo.IP = IPOK;
+
+                    var json = new JsonSerializer().Serialize(loginInfo);
+                    HttpContext.Session.Set("MyLoginInfo", Encoding.UTF8.GetBytes(json));
+
+                    SessionContext session = new SessionContext();
+                    session.uLoginUserId = userInfo.FirstOrDefault().UserID;
+                    session.uLoginUserAccount = account;
+                    session.uLoginName = userInfo.FirstOrDefault().UserName;
+                    session.IP = IPOK;
+
+                    HttpContext.SetSession(session);
+                    //var session2 = HttpContext.GetSession();
                 }
                 else
                 {

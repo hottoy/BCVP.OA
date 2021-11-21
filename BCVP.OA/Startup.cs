@@ -60,28 +60,43 @@ namespace BCVP.OA
              AddScoped：每次请求，都获取一个新的实例。同一个请求获取多次会得到相同的实例
              AddSingleton单例模式：每次都获取同一个实例 
              */
+            #region 添加cookie认证
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
+            services.AddAuthentication(o =>
             {
-                o.Cookie.Name = "_AdminTicketCookie";
-                o.LoginPath = new PathString("/Login/Index");//登录页面的url
-                o.AccessDeniedPath = new PathString("/Account/Login");//没有授权跳转的页面
-                o.LogoutPath = new PathString("/Login/Index");
-                o.AccessDeniedPath = new PathString("/ErrorHandler/Index");//没有授权跳转的页面,用cookie的方式验证，顺便初始化登录地址
-                //o.ExpireTimeSpan = TimeSpan.FromHours(0.5); // cookies的过期时间
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;//使用默认的Scheme认证授权Scheme
+
+            }).AddCookie(o =>
+            {
+                //关于Cookie的配置信息请参考：https://www.cnblogs.com/sheldon-lou/p/9545726.html
+                //o.Cookie.Domain = ".contoso.com";//设置Cookie的作用域：他的作用域就包括contoso.com,www.contoso.com
+                o.LoginPath = "/Login/Index"; //在身份验证的时候判断为“未登录”则跳转到这个页面
+                o.LogoutPath = "/ErrorHandler/Index";//如果要退出登录则跳转到这个页面
+                //o.AccessDeniedPath = "/Account/AccessDenied"; //如果已经通过身份验证，但是没有权限访问则跳转到这个页面
+                o.Cookie.HttpOnly = true;//设置 cookie 是否是只能被服务器访问，默认 true,为true时通过js脚本将无法读取到cookie信息，这样能有效的防止XSS攻击，窃取cookie内容，这样就增加了cookie的安全性
+                o.SlidingExpiration = true;//设置Cookie过期时间为相对时间；也就是说在Cookie设定过期的这个时间内用户没有访问服务器，那么cookie就会过期，若有访问服务器，那么cookie期限将从新设为这个时间
+                o.ExpireTimeSpan = TimeSpan.FromDays(1); //设置Cookie过期时间为1天
+                o.ClaimsIssuer = "Cookie";//获取或设置应用于创建的任何声明的颁发者
+                //o.Cookie.Path = "/app1"; //用来隔离同一个服务器下面的不同站点。比如站点是运行在/app1下面，设置这个属性为/app1，那么这个 cookie 就只在 app1下有效。
             });
 
-            //基于内存的Session
+            #endregion
+
+            //基于内存的Session【分布式内存缓存】
             services.AddDistributedMemoryCache();
 
-            //Session的性质.配置session超时时间60分钟。也可以不指定时间
+            #region 注册Session【Session的性质.配置session超时时间60分钟。也可以不指定时间】
             services.AddSession(options =>
             {
+                options.Cookie.Name = ".Market.Session";
                 options.IdleTimeout = TimeSpan.FromSeconds(60);
-                //options.Cookie.HttpOnly = true; //设置在浏览器不能通过js获得该cookie的值
+                //options.Cookie.HttpOnly = true; //设置在浏览器不能通过js获得该cookie的值防止xss攻击
                 //options.Cookie.IsEssential = true;//Cookie是必须的(默认是false),可以覆盖上面的cookie策略
             });
+
+            #endregion
+
+
             //利用ASP.NET Core提供的IHttpContextAccessor来获取HttpContext
             //services.AddHttpContextAccessor();
             //services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -91,6 +106,7 @@ namespace BCVP.OA
             // 以下code可能与文章中不一样,对代码做了封装,具体查看右侧 Extensions 文件夹.
             services.AddSingleton(new Appsettings(Configuration));
             services.AddSingleton(new LogLock(Env.ContentRootPath));
+
 
 
             //Permissions.IsUseIds4 = Appsettings.app(new string[] { "Startup", "IdentityServer4", "Enabled" }).ObjToBool();
@@ -138,6 +154,16 @@ namespace BCVP.OA
 
             services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true)
                     .Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
+
+            #region 防止页面切换后Session ID改变，Seesion失效
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => false;//在使用Session和Cookie时true必须改为false
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+
+            #endregion
 
             services.AddControllers(o =>
             {

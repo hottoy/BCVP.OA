@@ -3,6 +3,8 @@ using BCVP.Common.LogHelper;
 using BCVP.Hubs;
 using BCVP.IServices.IOAServices;
 using BCVP.Model;
+using BCVP.Model.Models.OAModel;
+using BCVP.Model.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,9 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using StackExchange.Profiling;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using System.Text;
+using Nancy.Json;
 
 namespace BCVP.OA.Filter
 {
@@ -25,24 +26,22 @@ namespace BCVP.OA.Filter
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
-
         private readonly IWebHostEnvironment _env;
         private readonly IHubContext<ChatHub> _hubContext;
         private readonly ILogger<GlobalExceptionsFilter> _loggerHelper;
-
-        public GlobalExceptionsFilter(IWebHostEnvironment env, ILogger<GlobalExceptionsFilter> loggerHelper, IHubContext<ChatHub> hubContext, IHttpContextAccessor httpContextAccessor)
+        private readonly ISysLogExceptionServices _sysLogExceptionServices;
+        public GlobalExceptionsFilter(IWebHostEnvironment env, ILogger<GlobalExceptionsFilter> loggerHelper, IHubContext<ChatHub> hubContext, IHttpContextAccessor httpContextAccessor, ISysLogExceptionServices sysLogExceptionServices)
         {
             _env = env;
             _loggerHelper = loggerHelper;
             _hubContext = hubContext;
             _httpContextAccessor = httpContextAccessor;
+            _sysLogExceptionServices = sysLogExceptionServices;
         }
 
         public void OnException(ExceptionContext context)
         {
-            //string ip = _session.GetString("Ip");
             var json = new MessageModel<string>();
-
             json.msg = context.Exception.Message;//错误信息
             json.status = 500;//500异常 
             var errorAudit = "Unable to resolve service for";
@@ -62,10 +61,42 @@ namespace BCVP.OA.Filter
 
             MiniProfiler.Current.CustomTiming("Errors：", json.msg);
 
+            #region 将异常日志写入数据表
+
+            var UserSessionSessionContext = context.HttpContext.GetSession();//获取当前登录用户Session信息
+            //var userInfo = new JsonSerializer().Deserialize<LoginInfoViewModels>(Encoding.UTF8.GetString(_session.Get("MyLoginInfo")));
+
+            if (context != null && context.HttpContext != null && context.Exception != null)
+            {
+                var UserSession = context.HttpContext.Session.GetString("MyLoginInfo");
+                if (UserSession != null && UserSession != "" && UserSession != System.String.Empty&&UserSession.Length > 0)
+                {
+                    JavaScriptSerializer jsonReader = new JavaScriptSerializer();
+                    var userInfo = (LoginInfoViewModels)jsonReader.Deserialize<LoginInfoViewModels>(context.HttpContext.Session.GetString("MyLoginInfo"));
+                    var p = "";
+                    foreach (var item in context.ActionDescriptor.Parameters.ToList())
+                    {
+                        p = p + item.Name + ",";
+                    }
+                    SysLogException m = new SysLogException();
+                    m.ControllerName = ((Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor)context.ActionDescriptor).ControllerName.ToString();
+                    m.Oper_IP = userInfo.IP;
+                    m.Oper_User_Name = userInfo.uLoginName;
+                    m.Oper_Versions = DateTime.Now.ToShortDateString();
+                    m.Oper_User_ID = userInfo.uLoginUserId;
+                    m.Exc_Message = context.Exception.ToString();
+                    m.Oper_CreateTime = DateTime.Now;
+                    m.Oper_Method = context.ActionDescriptor.DisplayName.ToString();
+                    m.Exc_Requ_Param = p;
+                    m.Exc_Name = context.Exception.Message.ToString();
+                    _sysLogExceptionServices.Add(m);
+                }
+            }
+
+            #endregion
 
             //采用log4net 进行错误日志记录
             _loggerHelper.LogError(json.msg + WriteLog(json.msg, context.Exception));
-
             _hubContext.Clients.All.SendAsync("ReceiveUpdate", LogLock.GetLogData()).Wait();
 
         }

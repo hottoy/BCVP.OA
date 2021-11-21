@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BCVP.Model.Enums;
 
 namespace BCVP.Model.Models.OAModel
 {
@@ -77,12 +78,18 @@ namespace BCVP.Model.Models.OAModel
         /// 创建时间
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public DateTime Oper_CreateTime { get; set; } = System.DateTime.Now;
+        public object Oper_CreateTime { get; set; } = System.DateTime.Now;
 
         /// <summary>
         /// 版本号
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public string Oper_Versions { get; set; }
+
+        /// <summary>
+        /// 登录来源（0:PC 1:webapp 2:App 3:微信 4:IOS）
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public LoginSrc Login_Src { get; set; }
     }
 }

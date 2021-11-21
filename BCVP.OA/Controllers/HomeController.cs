@@ -41,19 +41,33 @@ namespace BCVP.OA.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        /// <summary>
-        /// 注销方法,退出登录
-        /// </summary>
-        public async Task<ActionResult> Logout()
+        ///// <summary>
+        ///// 注销方法,退出登录
+        ///// </summary>
+        //public async Task<ActionResult> Logout()
+        //{
+        //    await Task.Run(() => {
+        //        HttpContext.Session.Clear();
+        //        HttpContext.ChallengeAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);//若要注销当前用户并将其删除 cookie
+        //        HttpContext.Response.Cookies.Delete($".AspNetCore.{CookieAuthenticationDefaults.AuthenticationScheme}");
+        //        //RedirectToAction("Index", "Login");
+        //    });
+        //    return RedirectToAction("Index", "Login"); ;
+        //}
+        public IActionResult Logout()
         {
-            await Task.Run(() => {
-                HttpContext.Session.Clear();
-                HttpContext.ChallengeAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);//若要注销当前用户并将其删除 cookie
-                HttpContext.Response.Cookies.Delete($".AspNetCore.{CookieAuthenticationDefaults.AuthenticationScheme}");
-                //RedirectToAction("Index", "Login");
-            });
-            return RedirectToAction("Index", "Login"); ;
+            if (User.Identity.IsAuthenticated)
+            {
+                Task.Run(async () => {
+                    HttpContext.Session.Clear();
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);//退出登录(清空session与sookie值)
+                    await HttpContext.SignOutAsync(); 
+                }).Wait();
+            }
+
+            //销毁 Claim 的 Cookie 后，可以跳转到登录页面
+            return RedirectToAction("Index", "Login");
         }
     }
 }
