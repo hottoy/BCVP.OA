@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Text;
 using Nancy.Json;
+using System.IO;
 
 namespace BCVP.OA.Filter
 {
@@ -69,7 +70,7 @@ namespace BCVP.OA.Filter
             if (context != null && context.HttpContext != null && context.Exception != null)
             {
                 var UserSession = context.HttpContext.Session.GetString("MyLoginInfo");
-                if (UserSession != null && UserSession != "" && UserSession != System.String.Empty&&UserSession.Length > 0)
+                if (UserSession != null && UserSession != "" && UserSession != System.String.Empty && UserSession.Length > 0)
                 {
                     JavaScriptSerializer jsonReader = new JavaScriptSerializer();
                     var userInfo = (LoginInfoViewModels)jsonReader.Deserialize<LoginInfoViewModels>(context.HttpContext.Session.GetString("MyLoginInfo"));
@@ -91,6 +92,15 @@ namespace BCVP.OA.Filter
                     m.Exc_Name = context.Exception.Message.ToString();
                     _sysLogExceptionServices.Add(m);
                 }
+                // 此处进行异常记录，可以记录到数据库或文本，也可以使用其他日志记录组件。
+                // 通过filterContext.Exception来获取这个异常。
+                string filePath = @"D:\OA系统异常日志\"+DateTime.Now.ToString("yyyy-MM-dd")+"\\";
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+                string errorMsg = $"------------------------开始时间："+DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "------------------------\r\n" + context.Exception.ToString() + " \r\n------------------------结束时间：" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "------------------------\r\n";
+                FileHelper.FileAdd(filePath + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", errorMsg);
             }
 
             #endregion
@@ -98,6 +108,8 @@ namespace BCVP.OA.Filter
             //采用log4net 进行错误日志记录
             _loggerHelper.LogError(json.msg + WriteLog(json.msg, context.Exception));
             _hubContext.Clients.All.SendAsync("ReceiveUpdate", LogLock.GetLogData()).Wait();
+            //表示异常已经处理
+            context.ExceptionHandled = true;
 
         }
 
