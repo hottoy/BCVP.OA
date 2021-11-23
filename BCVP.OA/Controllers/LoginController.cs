@@ -1,6 +1,7 @@
 ﻿using BCVP.Common.Helper;
 using BCVP.IServices.IOAServices;
 using BCVP.Model;
+using BCVP.Model.Models.OAModel;
 using BCVP.Model.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -36,12 +37,17 @@ namespace BCVP.OA.Controllers
 
         public async Task<JsonResult> CheckLogin(string account, string password)
         {
+            SysLogUserLogin loginModel = new SysLogUserLogin();
             string ipd = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
             JsonResponse result = new JsonResponse();
             string strHostName = System.Net.Dns.GetHostName();
             //string clientIPAddress = System.Net.Dns.GetHostAddresses(strHostName).GetValue(0).ToString();
             string IPOK = IpHelper.GetCurrentIp(strHostName);//System.Net.Dns.GetHostAddresses(strHostName)[2].ToString();
-            result.ip = IPOK;
+            loginModel.Login_IP = IPOK;
+            loginModel.Login_Src = LoginSrc.PC;
+            loginModel.Login_Status = LoginStatus.Success;
+            loginModel.Login_CreateTime = DateTime.Now;
+            loginModel.Login_Type = LoginType.Login;
             try
             {
                 // 获取客户端的IP
@@ -88,7 +94,6 @@ namespace BCVP.OA.Controllers
                     }).Wait();
 
                     LoginInfoViewModels loginInfo = new LoginInfoViewModels();
-                    result.LogID = userInfo.FirstOrDefault().UserID;
                     result.msg = "登录成功！";
                     loginInfo.uLoginUserId = userInfo.FirstOrDefault().UserID;
                     loginInfo.uLoginUserAccount = account;
@@ -106,11 +111,16 @@ namespace BCVP.OA.Controllers
 
                     HttpContext.SetSession(session);
                     //var session2 = HttpContext.GetSession();
+                    loginModel.Login_UserID = userInfo.FirstOrDefault().UserID;
+                    loginModel.Login_Message = "登录成功";
+
                 }
                 else
                 {
                     result.code = ResponseCode.Fail;
                     result.msg = "登录失败,账号或密码错误！";
+                    loginModel.Login_Message = result.msg;
+                    loginModel.Login_Status = LoginStatus.Fail;
                 }
             }
             catch (Exception ex)
@@ -118,9 +128,11 @@ namespace BCVP.OA.Controllers
                 result.code = ResponseCode.Fail;
                 result.count = 0;
                 result.msg = "登录失败！系统异常：" + ex.Message;
-                await _sysLogUserLoginServices.WriteSystemLog(result);
+                loginModel.Login_Message = result.msg;
+                loginModel.Login_Status = LoginStatus.Fail;
+                await _sysLogUserLoginServices.Add(loginModel);
             }
-            await _sysLogUserLoginServices.WriteSystemLog(result);
+            await _sysLogUserLoginServices.Add(loginModel);
             return Json(result);
         }
     }

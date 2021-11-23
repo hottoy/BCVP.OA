@@ -32,15 +32,5 @@ namespace BCVP.Model
         /// 重定向地址
         /// </summary>
         public string redirect { get; set; }
-
-        /// <summary>
-        /// IP地址
-        /// </summary>
-        public string ip { get; set; }
-
-        /// <summary>
-        /// 操作员ID
-        /// </summary>
-        public int LogID { get; set; }
     }
 }

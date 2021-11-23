@@ -231,16 +231,6 @@
             重定向地址
             </summary>
         </member>
-        <member name="P:BCVP.Model.JsonResponse.ip">
-            <summary>
-            IP地址
-            </summary>
-        </member>
-        <member name="P:BCVP.Model.JsonResponse.LogID">
-            <summary>
-            操作员ID
-            </summary>
-        </member>
         <member name="T:BCVP.Model.Love">
             <summary>
             这是爱

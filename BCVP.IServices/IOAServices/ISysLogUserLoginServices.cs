@@ -15,13 +15,6 @@ namespace BCVP.IServices.IOAServices
     public interface ISysLogUserLoginServices : IBaseServices<SysLogUserLogin>
     {
         /// <summary>
-        /// 保存日志
-        /// </summary>
-        /// <param name="jsonResponse"></param>
-        /// <returns></returns>
-        Task WriteSystemLog(JsonResponse jsonResponse);
-
-        /// <summary>
         /// 获取日志信息列表
         /// </summary>
         /// <param name="loginType">类型（0注册，1登录,2重置密码,3禁用）</param>
