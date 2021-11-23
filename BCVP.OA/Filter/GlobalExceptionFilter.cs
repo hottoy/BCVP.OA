@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using Nancy.Json;
 using System.IO;
+using BCVP.Common;
 
 namespace BCVP.OA.Filter
 {
@@ -94,7 +95,7 @@ namespace BCVP.OA.Filter
                 }
                 // 此处进行异常记录，可以记录到数据库或文本，也可以使用其他日志记录组件。
                 // 通过filterContext.Exception来获取这个异常。
-                string filePath = @"D:\OA系统异常日志\"+DateTime.Now.ToString("yyyy-MM-dd")+"\\";
+                string filePath = Appsettings.app(new string[] { "FilePath", "ExceptionsFilter" }) + DateTime.Now.ToString("yyyy-MM-dd")+"\\";
                 if (!Directory.Exists(filePath))
                 {
                     Directory.CreateDirectory(filePath);

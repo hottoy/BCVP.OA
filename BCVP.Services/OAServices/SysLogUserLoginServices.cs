@@ -103,7 +103,7 @@ namespace BCVP.Services.OAServices
                 LogModel.Login_IP = jsonResponse.ip;
                 LogModel.Login_UserID = jsonResponse.LogID;
                 LogModel.Login_Message = jsonResponse.msg;
-                LogModel.Login_CreateTime = Convert.ToInt32(DateTime.Now);
+                LogModel.Login_CreateTime = DateTime.Now;
                 LogModel.Login_Src = LoginSrc.PC;
                 LogModel.Login_Status = jsonResponse.code == ResponseCode.Fail ? LoginStatus.Fail : LoginStatus.Success;
                 await _dal.Add(LogModel);
