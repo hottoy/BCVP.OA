@@ -32,7 +32,7 @@ namespace BCVP.OA
                      //接入Apollo配置中心
                      config.AddConfigurationApollo("appsettings.apollo.json");
                  })
-                 .UseUrls("http://*:9291")//2021-11-14注释掉
+                 //.UseUrls("http://*:9291")//2021-11-14注释掉
                  .ConfigureLogging((hostingContext, builder) =>
                  {
                      // 1.过滤掉系统默认的一些日志

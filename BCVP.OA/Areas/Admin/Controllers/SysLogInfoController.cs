@@ -50,21 +50,19 @@ namespace BCVP.OA.Areas.Admin.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData(int? loginType, int? loginStatus, int? loginSrc, string keyWord, int page, int limit, string field = "LOGIN_ID", string order = "DESC")
         {
-            PageModel<SysLogUserLogin> entities = await _sysLogUserLoginServices.GetInfoList(loginType, loginStatus, loginSrc, keyWord, page, limit, field, order);
-
-            if (entities.data != null && entities.data.Count != 0)
+            JsonResponse result = new JsonResponse();
+            try
             {
-                entities.data.ForEach(s => s.Login_CreateTime = (s.Login_CreateTime == null ? "" : s.Login_CreateTime.ToString()));
+                PageModel<SysLogUserLogin> entities = await _sysLogUserLoginServices.GetInfoList(loginType, loginStatus, loginSrc, keyWord, page, limit, field, order);
+                result.data = entities.data;
+                result.count = entities.data.Count;
             }
-            Hashtable table = new Hashtable
+            catch (Exception ex)
             {
-                ["code"] = 0,
-                ["msg"] = "",
-                ["count"] = entities.dataCount,//总条数
-                ["data"] = entities.data//分页数据
-            };
-            //return Json(table);
-            return Json(new { code = 0, count = entities.dataCount, data = entities.data, msg = "" });
+                result.code = ResponseCode.Fail;
+                result.msg = "系统异常：" + ex.ToString();
+            }
+            return Json(result);
         }
 
         /// <summary>

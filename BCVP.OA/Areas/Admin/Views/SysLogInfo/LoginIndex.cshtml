@@ -80,7 +80,7 @@
             page: true,
             skin: 'line ', //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
             toolbar: '#organizationUserTbToolBar',
-            cellMinWidth: 100,
+            //cellMinWidth: 100,
             cols: [[
                 { type: 'checkbox', fixed: 'left' }
                 ,{ type: 'numbers' ,title:'序号'}
@@ -88,7 +88,7 @@
                 , { field: 'UserName', title: '用户名', minWidth: 100 }
                 , { field: 'UserAccount', title: '账号', width: 100 }
                 , {
-                    field: 'Login_Type', width: 90, title: '类型', align: 'center'
+                    field: 'Login_Type', width: 60, title: '类型', align: 'center'
                     , templet: function (d) {
                         if (d.Login_Type == 0) {
                             return '<span style="color:#FF5722">注册</span>';
@@ -133,8 +133,8 @@
                         }
                     }
                 }
-                , { field: 'Login_IP', title: 'IP' }
-                , { field: 'Login_CreateTime', title: '登录时间', sort: true }
+                , { field: 'Login_IP', title: 'IP' ,width:90}
+                , { field: 'Login_CreateTime', title: '登录时间', with:140, sort: true }
                 ,{ field: 'Remark', title: '返回信息'  }
             ]]
             , limit: 15
