@@ -79,6 +79,11 @@
             1:成功
             </summary>
         </member>
+        <member name="T:BCVP.Model.Enums.Attributes">
+            <summary>
+            属性
+            </summary>
+        </member>
         <member name="T:BCVP.Model.Enums.OrgAttribute">
             <summary>
             机构属性。
@@ -731,6 +736,11 @@
             创建时间
             </summary>
         </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysLogUserLogin.CreateTimeString">
+            <summary>
+            返回创建时间
+            </summary>
+        </member>
         <member name="P:BCVP.Model.Models.OAModel.SysLogUserLogin.UserName">
             <summary>
             用户名称
@@ -826,6 +836,11 @@
             是否被选中
             </summary>
         </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysOrg">
+            <summary>
+            系统组织机构表
+            </summary>
+        </member>
         <member name="P:BCVP.Model.Models.OAModel.SysOrg.OrgID">
             <summary>
             主键自增非空
@@ -889,6 +904,196 @@
         <member name="P:BCVP.Model.Models.OAModel.SysOrg.open">
             <summary>
             是否打开
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysOrgRoleRel">
+            <summary>
+            组织角色关联表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.OrgRoleRelID">
+            <summary>
+            主键 用户登录日志
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.OrgID">
+            <summary>
+            组织机构主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.RoleID">
+            <summary>
+            角色主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.DataID">
+            <summary>
+            数据权限ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.SystemVersionID">
+            <summary>
+            系统架构编码ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.IsDeleted">
+            <summary>
+            是否删除
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysOrgRoleRel.CreateTimeString">
+            <summary>
+            返回创建时间
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysPosition">
+            <summary>
+            职位表【岗位与人对应，只能由一个人担任，一个或若干个岗位的共性体现就是职位，即职位可以由一个或多个岗位组成】
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPosition.PositionID">
+            <summary>
+            主键 职位表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPosition.Parent_ID">
+            <summary>
+            父级ID 上级职位
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPosition.PositionName">
+            <summary>
+            职位名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPosition.PositionCode">
+            <summary>
+            职位编码
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPosition.OrgID">
+            <summary>
+            组织机构ID
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysPositionRoleRel">
+            <summary>
+            身份-角色关联表  
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.PositionRoleID">
+            <summary>
+            主键 身份-角色关联表 
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.PositionID">
+            <summary>
+            职位主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.RoleID">
+            <summary>
+            角色主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.DataID">
+            <summary>
+            数据权限ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.SystemVersionID">
+            <summary>
+            系统架构编码ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.IsDeleted">
+            <summary>
+            1表示删除；0表示未删除
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysPositionRoleRel.CreateTimeString">
+            <summary>
+            返回创建时间
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysRole">
+            <summary>
+            系统角色表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.Role_ID">
+            <summary>
+            主键自增非空
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.Parent_ID">
+            <summary>
+            父级ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.Role_Code">
+            <summary>
+            角色编码
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.Role_Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.Role_Attribute">
+            <summary>
+            属性标记
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.SystemVersionID">
+            <summary>
+            系统架构编码【2021-12-3新加】
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.ParentName">
+            <summary>
+            父级名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.ParentCode">
+            <summary>
+            父级编码
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysRole.SystemVersionName">
+            <summary>
+            系统编码
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SystemVersion">
+             <summary>
+            系统表
+             </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SystemVersion.SystemVersionID">
+            <summary>
+            主键自增非空
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SystemVersion.SystemVersionName">
+            <summary>
+            系统名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SystemVersion.SystemVersionCode">
+            <summary>
+            系统名称
             </summary>
         </member>
         <member name="T:BCVP.Model.Models.OAModel.SysUser">
@@ -1054,6 +1259,171 @@
         <member name="P:BCVP.Model.Models.OAModel.SysUser.SexName">
             <summary>
             性别
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysUserGroup">
+            <summary>
+            用户组表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroup.UserGroupID">
+            <summary>
+            主键 用户组表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroup.ParentID">
+            <summary>
+            用户组表父级ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroup.UserGroupName">
+            <summary>
+            用户组名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroup.UserGroupCode">
+            <summary>
+            用户组编码
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysUserGroupRel">
+            <summary>
+            用户与用户组关联表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRel.UserGroupRelID">
+            <summary>
+            用户与用户组关联表主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRel.UserID">
+            <summary>
+            用户表ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRel.UserGroupID">
+            <summary>
+            用户组表ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRel.IsDeleted">
+             <summary>
+            获取或设置是否禁用，逻辑上的删除，非物理删除
+             </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRel.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysUserGroupRoleRel">
+            <summary>
+            用户组——角色关联表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.UserGroupRoleID">
+            <summary>
+            主键ID 
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.UserGroupID">
+            <summary>
+            用户组主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.RoleID">
+            <summary>
+            角色主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.DataID">
+            <summary>
+            数据权限ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.SystemVersionID">
+            <summary>
+            系统架构编码ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.IsDeleted">
+            <summary>
+            1表示删除；0表示未删除
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserGroupRoleRel.CreateTimeString">
+            <summary>
+            返回创建时间
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysUserOrgRel">
+            <summary>
+            用户组织关联表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserOrgRel.UserOrgRelID">
+            <summary>
+            主键 用户登录日志
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserOrgRel.UserID">
+            <summary>
+            用户主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserOrgRel.OrgID">
+            <summary>
+            组织机构主键ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserOrgRel.OrgType">
+            <summary>
+            组织类型
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserOrgRel.IsDeleted">
+             <summary>
+            获取或设置是否禁用，逻辑上的删除，非物理删除
+             </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserOrgRel.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysUserPositionRel">
+            <summary>
+            用户职位关联表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserPositionRel.UserPositionRelID">
+            <summary>
+            主键 用户职位关联表
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserPositionRel.UserID">
+            <summary>
+            用户表ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserPositionRel.PositionID">
+            <summary>
+            职位ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserPositionRel.IsDeleted">
+             <summary>
+            获取或设置是否禁用，逻辑上的删除，非物理删除
+             </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUserPositionRel.CreateTime">
+            <summary>
+            创建时间
             </summary>
         </member>
         <member name="T:BCVP.Model.Models.OperateLog">
@@ -1304,6 +1674,46 @@
         <member name="P:BCVP.Model.Models.RoleModulePermission.ModifyTime">
             <summary>
             修改时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.PyCode">
+            <summary>
+            名称拼音字母
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.IsVersions">
+            <summary>
+            版本号
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.OrderSort">
+            <summary>
+            排序码
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.IsEnabled">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.IsDeleted">
+             <summary>
+            获取或设置是否禁用，逻辑上的删除，非物理删除
+             </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.ModifyTime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.RootTkey.RootEntitySys.Remark">
+            <summary>
+            备注
             </summary>
         </member>
         <member name="T:BCVP.Model.Models.sysUserInfo">

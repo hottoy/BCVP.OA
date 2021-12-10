@@ -1,0 +1,275 @@
+﻿
+@{
+    ViewData["Title"] = "系统版本管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a><cite>组件</cite></a>
+        <a><cite>数据表格</cite></a>
+        <a><cite>数据操作</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    @*<div class="layui-btn-group TableSystemVersion-btn" style="margin-bottom: 10px;">
+                            <button class="layui-btn" data-type="getCheckData">获取选中行数据</button>
+                            <button class="layui-btn" data-type="DeleteCheck">获取选中数目</button>
+                            <button class="layui-btn" data-type="isAll">验证是否全选</button>
+                        </div>*@
+
+                    <table class="layui-hide" id="TableSystemVersion" lay-filter="TableSystemVersion"></table>
+
+                    <script type="text/html" id="TableSystemVersion-toolbar">
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">{{d.IsEnabled==1?"禁用":"激活"}}</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="test-table-radio-toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="DeleteCheck">删除</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    </div>
+</script>
+
+<!--定义高级查询模板-->
+<script type="text/html" id="tem">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="test-table-reload-btn">
+                关键词:
+                <div class="layui-inline">
+                    <input name="edtSearch" id="edtSearch" autocomplete="off" class="layui-input" placeholder="名称或者编码" style="display: inline-block;width: 140px;height: 30px;line-height: 30px;padding: 0 5px;margin-right: 0px;" />
+                </div>
+                <button id="btnSearch" name="btnSearch" class="layui-btn layui-btn-sm layui-btn-primary">
+                    <i class="layui-icon">&#xe615;</i>搜索
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index'//主入口模块
+    }).use(['layer', 'form', 'index', 'table'], function () {
+        var $ = layui.jquery,layer = layui.layer, admin = layui.admin , table = layui.table;
+
+        var insTb=table.render({
+            elem: '#TableSystemVersion'
+            , title: '系统版本'
+            ,skin: 'line ' //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
+            , url: '@Url.Action("GetData")?keyWord='
+            , toolbar: '#test-table-radio-toolbarDemo'
+            , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '提示'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-tips'
+            }, {
+                title: '条件过滤'
+                , layEvent: 'searchDiv'
+                , icon:'layui-icon-search'
+                }]
+            //, width: admin.screen() > 1 ? 900 : ''
+            , height: 'full-50'
+            , cellMinWidth: 80
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' }
+                , { type: 'numbers', title: '序号', width:80, fixed: 'left' }
+                , { field: 'SystemVersionID', width: 80, title: 'ID',hide:true}
+                , { field: 'SystemVersionName', width: 120, title: '系统名称' }
+                , { field: 'SystemVersionCode', width: 120, title: '系统编码', sort: true }
+                , { field: 'CreateTimeString', width: 160, title: '创建时间', sort: true }
+                , { field: 'Remark', width: 160, title: '备注' }
+                , {
+                    field: 'IsEnabled', width: 120, title: '是否激活', sort: true, fixed: 'right', templet: function (d) {
+                        if (d.IsEnabled == 0) {
+                            return '<span style="color:#FF5722">禁用</span>';
+                        } else if (d.IsEnabled == 1) {
+                            return '<span style="color:#3E8AF4">激活</span>';
+                        } else {
+                            return '未处理';
+                        }
+                    }
+                }
+                , { title:'操作列',width: 178, align: 'center', fixed: 'right', toolbar: '#TableSystemVersion-toolbar' }
+            ]]
+            , initSort: {
+                field: 'SystemVersionID' //排序字段，对应 cols 设定的各字段名
+                , type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+            }
+            , sort: true  //重点1：这里的sort表示 table表在取得接口数据后，对页面渲染后的table数据进行排序。同时，这里的true 会影响页面sort 上下小箭头的 显示效果
+            , page: true
+            , curr: 1//当前页数
+            , limit: 10 //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+            , limits: [10, 20, 30, 50, 100, 500, 1000]
+            , loading: true
+            , text: {none:"未查到数据"}
+        });
+        //头工具栏事件
+        table.on('toolbar(TableSystemVersion)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+            switch (obj.event) {
+                case 'getCheckData':
+                    //var data = checkStatus.data;  //获取选中行数据
+                    layer.open({
+                    type: 2,
+                    title: '添加系统编码',
+                    area: ['500px', '370px'],
+                    fixed: false,
+                    maxmin: true,
+                    content: '@Url.Action("Edit")?SystemVersionID=0'
+                });
+                    break;
+                case 'DeleteCheck':
+                    var data = checkStatus.data;  //获取选中行数据
+                    layer.msg('选中了：' + data.length + ' 个');
+                    var IDS = [];
+                    for (var i = 0; i < data.length; i++) {
+                        IDS.push(data[i].SystemVersionID);
+                    }
+
+                   $.ajax({
+                    url: '@Url.Action("DeleteSelectIds")',
+                    type: 'POST',
+                    dataType:'JSON',
+                    data: { Ids: IDS },
+                    success: function (res) {
+                        if (res.code === 0) {
+                            layer.alert("删除成功！", { icon: 6 }, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg("删除失败！", {icon:5});
+                        }
+                    }
+                });
+                    break;
+                case 'isAll':
+                    var checkStatus = table.checkStatus('TableSystemVersion');
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    break;
+                case 'searchDiv':
+                    layer.open({
+                        title: '高级查询'
+                        , type: 1
+                        //,skin: 'layui-layer-rim'
+                        , shadeClose: true
+                        , area: admin.screen() < 2 ? ['50%', '300px'] : ['400px', '200px']
+                       // , content: '<div style="padding: 20px;">关键词:<div class="layui-inline"> <input name="edtSearch" id="edtSearch" autocomplete="off" class="layui-input" placeholder="菜单或者编码" style="display: inline-block;width: 140px;height: 30px;line-height: 30px;padding: 0 5px;margin-right: 10px;" /></div><button id="btnSearch" name="btnSearch" lay-event="btnSearch" class="layui-btn layui-btn-sm layui-btn-primary" onclick="myFunction()"> <i class="layui-icon">&#xe615;</i>搜索</button></div>'
+                        , content:$('#tem').html()
+                    });
+                    break;
+            };
+        });
+
+
+        //监听表格复选框选择
+        table.on('checkbox(TableSystemVersion)', function (obj) {
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(TableSystemVersion)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                $.ajax({
+                    url: '@Url.Action("SetStatus")',
+                    type: 'POST',
+                    dataType:'JSON',
+                    data: { Id: data.SystemVersionID },
+                    success: function (res) {
+                        if (res.code === 0) {
+                            layer.alert("设置成功！", { icon: 6 }, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg("设置失败！", {icon:5});
+                        }
+                    }
+                });
+            } else if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteById")',
+                        type: 'POST',
+                        data: {
+                            Id: data.SystemVersionID
+                        },
+                        dataType: 'JSON',
+                        success: function (res) {
+                            if (res.code === 0) {
+                                layer.alert("删除成功！", { icon: 6 }, function () {
+                                    window.location.reload();
+                                });
+                            }
+                            else {
+                                layer.msg("删除失败！", { icon: 5 });
+                            }
+                        }
+                    });
+                })
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    title: '修改系统编码',
+                    area: ['600px', '450px'],
+                    fixed: false,
+                    maxmin: true,
+                    content: '@Url.Action("Edit")?SystemVersionID=' + data.SystemVersionID
+                });
+            }
+        });
+
+        var $ = layui.$, active = {
+            getCheckData: function () { //获取选中数据
+                var checkStatus = table.checkStatus('TableSystemVersion')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+            , DeleteCheck: function () { //获取选中数目
+                var checkStatus = table.checkStatus('TableSystemVersion')
+                    , data = checkStatus.data;
+                layer.msg('选中了：' + data.length + ' 个');
+            }
+            , isAll: function () { //验证是否全选
+                var checkStatus = table.checkStatus('TableSystemVersion');
+                layer.msg(checkStatus.isAll ? '全选' : '未全选')
+            }
+        };
+
+        $('.TableSystemVersion-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //高级搜索方法
+        $(document).on('click', '#btnSearch', function () {
+             var keywords = $('#edtSearch').val();
+            insTb.reload({
+                where: { keyWord: keywords },
+                            page: { curr: 1 },
+                            url: '@Url.Action("GetData")'
+            });
+            layer.close(layer.index);
+            //layer.closeAll('page'); //关闭所有页面层
+            return false;
+        });
+    });
+</script>
+
+

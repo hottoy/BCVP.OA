@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewData["Title"] = "修改系统版本";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form class="layui-form" lay-filter="component-form-element">
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-row layui-col-space10 layui-form-item">
+                    <div class="layui-col-lg6">
+                        <label class="layui-form-label">系统名称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="SystemVersionName" id="SystemVersionName" lay-verify="required|username" lay-error="请输入唯一系统名称" placeholder="唯一系统名称" autocomplete="off" class="layui-input" value="">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <label class="layui-form-label">系统编码：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="SystemVersionCode" id="SystemVersionCode" lay-verify="required" lay-error="请输入唯一编号号" placeholder="唯一编号号" autocomplete="off" class="layui-input" value="">
+                        </div>
+                    </div>
+                    <div class="layui-col-lg6">
+                        <label class="layui-form-label">备注：</label>
+                        <div class="layui-input-block">
+                            <textarea name="Remark" id="Remark" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="saveInfo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'layedit','form'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , form = layui.form;
+        var systemVersionID = '@Context.Request.Query["SystemVersionID"]';
+            //监听提交
+            form.on('submit(saveInfo)', function (data) {
+        data.field.SystemVersionID = '@Context.Request.Query["SystemVersionID"]';
+        data.field.SystemVersionName = $('#SystemVersionName').val();
+        data.field.SystemVersionCode = $('#SystemVersionCode').val();
+        data.field.Remark = $('#Remark').val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("InsertOrEdit")",
+            data: { Info: data.field},
+                dataType: 'json',
+                success: function (res)
+                {
+                    if (res.count> 0)
+                    {
+                        layer.alert('保存成功', { icon: 6 }, function () {
+                           //刷新父
+                            window.parent.location.reload();
+                           // 获得frame索引
+                           var index = parent.layer.getFrameIndex(window.name);
+                           //关闭当前frame
+                           parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.msg('菜单名称已经存在，修改失败！', { icon: 5 });
+                    }
+                }
+            });
+            return false;
+            });
+
+        //自定义验证
+        form.verify({
+            username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (value.length < 2) {
+                    return '标题至少得2个字符啊';
+                }
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字';
+                }
+
+                //如果不想自动弹出默认提示框，可以直接返回 true，这时你可以通过其他任意方式提示（v2.5.7 新增）
+                if (value === 'xxx') {
+                    return '用户名不能为敏感词';
+
+                }
+            }
+
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            , pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+            , title: function (value) {
+                if (value.length < 5) {
+                    return '标题至少得5个字符啊';
+                }
+            },
+            pwd: [
+                /^(\w){6,20}$/, '只能输入6-20个字母、数字、下划线'
+            ],
+            phones: [
+                /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/, '您的输入有误，请重新输入(中国11位手机号)'
+            ],
+            truename: [
+                /^[\u4e00-\u9fa5]{2,4}$/, '您的输入有误，请输入2-4位中文'
+            ],
+            cardId: [
+                /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, '请输入正确的身份证号'
+            ],
+            idCar: function (value, item) { //value：表单的值、item：表单的DOM对象
+                var exp = /(^\d{15}$)|(^\d{17}(x|X|\d)$)/;
+                if (value && !exp.test(value)) {
+                    return '请输入正确的身份证';
+                }
+            }
+
+        });
+
+            //加载信息
+
+        if (systemVersionID !== '0') {
+            $.getJSON('@Url.Action("GetInfo")?Id=' + systemVersionID, function (res) {
+                 // 用于提交成功初始化表单
+                form.val("component-form-element", {
+                    'SystemVersionName': res.data.SystemVersionName,
+                    "SystemVersionCode": res.data.SystemVersionCode,
+                    "Remark": res.data.Remark
+                });
+            });
+        }
+        else {
+        }
+    })
+</script>

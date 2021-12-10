@@ -43,7 +43,7 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// IP地址
         /// </summary>
-        [SugarColumn(ColumnDataType = "nvarchar", Length = 64, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 64, IsNullable = true)]
         public string Login_IP { get; set; }
 
         /// <summary>
@@ -55,13 +55,19 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 返回信息
         /// </summary>
-        [SugarColumn(ColumnDataType = "nvarchar", Length = 256, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 256, IsNullable = true)]
         public string Login_Message { get; set; }
 
         /// <summary>
         /// 创建时间
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public object Login_CreateTime { get; set; }
+        public DateTime Login_CreateTime { get; set; }
+
+        /// <summary>
+        /// 返回创建时间
+        /// </summary>
+        [SugarColumn(IsIgnore = true, ColumnDescription = "创建日期")]
+        public string CreateTimeString { get { return Login_CreateTime.ToString("yyyy-MM-dd HH:mm"); } }
     }
 }

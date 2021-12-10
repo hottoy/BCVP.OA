@@ -35,7 +35,7 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 异常信息
         /// </summary>
-        [SugarColumn(IsNullable =true)]
+        [SugarColumn(IsNullable = true, ColumnDataType = "CLOB", ColumnDescription = "富文本")]
         public string Exc_Message { get; set; }
 
         /// <summary>

@@ -8,6 +8,9 @@ using static BCVP.Model.Enums;
 
 namespace BCVP.Model.Models.OAModel
 {
+	/// <summary>
+	/// 系统组织机构表
+	/// </summary>
 	[SugarTable("TB_Sys_Org")]
 	public partial class SysOrg
 	{

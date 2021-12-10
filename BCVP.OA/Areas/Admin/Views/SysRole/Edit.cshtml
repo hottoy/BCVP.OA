@@ -1,0 +1,154 @@
+﻿
+@model BCVP.Model.Models.OAModel.SysRole
+
+@{
+    ViewData["Title"] = "修改角色";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上级角色</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="oldNames" id="oldNames" lay-verify="required" placeholder="所属角色名称" readonly="readonly" autocomplete="off" value='@Context.Request.Query["pName"]' class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Role_Name" id="Role_Name" lay-verify="required" placeholder="请输入角色名称" autocomplete="off" class="layui-input" value="@Model.Role_Name">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色属性</label>
+                    <div class="layui-input-block">
+                        <select lay-verify="required" name="Role_Attribute" id="Role_Attribute" lay-search="">
+                            <option value="1" @(Model.Role_Attribute == 1 ? "selected" : "")>普通</option>
+                            <option value="2" @(Model.Role_Attribute == 2 ? "selected" : "")>管理</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" >
+                    <label class="layui-form-label">系统编码</label>
+                    <div class="layui-input-block" lay-filter="MySystemVersionId">
+                        <select name="SystemVersionId" id="SystemVersionId" lay-filter="SystemVersionId">
+                        </select>
+                   </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+
+                        <input type="checkbox" name="IsEnabled" id="IsEnabled" lay-skin="switch" value="@Model.IsEnabled"
+                               @(Model.IsEnabled == 1 ? "checked" : "")
+                               lay-filter="IsEnabled" lay-text="启用|停用">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <textarea name="Remark" id="Remark" class="layui-textarea" placeholder="说明">@Model.Remark</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="saveInfo">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        layselect: 'layui_ext/layselect/layselect'
+    }).use(['jquery', 'form', 'layer', 'code', 'layselect'], function () {
+        var $ = layui.jquery, select = layui.layselect, form = layui.form, layer = layui.layer;
+        var Id = '@Context.Request.Query["Id"]';
+        var systemVersionID = '@Context.Request.Query["SystemVersionID"]';
+        //一般展示
+        select.render({
+            elem: "#SystemVersionId",
+            url: '@Url.Action("GetSystemVersionList2","SystemVersion",new { area="Admin"})?SelectId=@Context.Request.Query["SystemVersionID"]',//归属类型
+            data: '',
+            type:'get',
+            select: systemVersionID,//确认默认项
+            success: function (data) {
+                if (data != null) {
+
+                }
+                //初始化完毕，data为绑定到组件上的数组集合
+            },
+            fail: function (e) {
+                //失败时回调
+            },
+            format: function (data) {
+                return data;                //对数据进行映射处理，需映射成：code,codeName,status,select,groupName,groupChildren
+            },
+            onselect: function (data) {
+                systemVersionID = data;
+                //点击选中时触发，data为选中的value
+            }
+        });
+
+
+    ///* 监听状态 */
+    form.on('switch(IsEnabled)', function (obje) {
+        if (this.checked) { //this.checked就是值
+            obje.elem.value = 1;
+        }
+        else {
+            obje.elem.value = 0;
+        }
+    });
+
+    //监听提交
+    form.on('submit(saveInfo)', function (data) {
+        var Id ='@Context.Request.Query["Id"]';
+        var typeId='@Context.Request.Query["typeId"]'
+        data.field.Role_Code = '@Context.Request.Query["code"]';
+        data.field.Role_ID = Id;
+        data.field.SystemVersionID = systemVersionID;//$.trim($("#SystemVersionId").val());  //获取val;
+        data.field.Parent_ID = '@Context.Request.Query["pId"]';
+        data.field.IsEnabled = $("input[id='IsEnabled']").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("InsertOrEdit")",
+            data: { Info: data.field, Id: Id, TypeId: typeId},
+                dataType: 'json',
+                success: function (res)
+                {
+                    if (res.count> 0)
+                    {
+                        layer.alert('保存成功', { icon: 6 }, function () {
+                           //刷新父
+                            window.parent.location.reload();
+                           // 获得frame索引
+                           var index = parent.layer.getFrameIndex(window.name);
+                           //关闭当前frame
+                           parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.msg('菜单名称已经存在，修改失败！', { icon: 5 });
+                    }
+                }
+            });
+            return false;
+        });
+});
+
+
+
+</script>

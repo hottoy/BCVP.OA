@@ -31,6 +31,13 @@ namespace BCVP.OA.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Edit()
+        {
+            await Task.Run(() => { });
+            return View();
+        }
+
         /// <summary>
         /// 获取信息
         /// </summary>
@@ -57,42 +64,6 @@ namespace BCVP.OA.Areas.Admin.Controllers
         public ActionResult Edit(int id)
         {
             return View();
-        }
-
-        // POST: SysUserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: SysUserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: SysUserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

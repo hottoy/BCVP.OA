@@ -121,6 +121,17 @@ namespace BCVP.Model
         }
 
         /// <summary>
+        /// 属性
+        /// </summary>
+        public enum Attributes
+        {
+            [Description("管理层")]
+            Management=0,
+            [Description("普通")]
+            General =1
+        }
+
+        /// <summary>
         /// 机构属性。
         /// </summary>
         public enum OrgAttribute
