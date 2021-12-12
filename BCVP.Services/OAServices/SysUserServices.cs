@@ -24,40 +24,90 @@ namespace BCVP.Services.OAServices
         }
 
         /// <summary>
-        /// 根据机构ID获取对应的角色
+        /// 根据机构ID获取对应的用户信息
         /// </summary>
-        /// <param name="OrgID">机构OrgID</param>
-        /// <returns></returns>
-        public async Task<PageModel<SysUser>> GetInfoList(int OrgID, string userName, string userAccount, int? page, int? limit, string field, string order)
+        /// <param name="OrgCode">机构编码</param>
+        /// <param name="userName">用户名</param>
+        /// <param name="userAccount">登录账号</param>
+        /// <param name="page">每页显示条数</param>
+        /// <param name="limit">页面</param>
+        /// <param name="field">排序字段</param>
+        /// <param name="order">desc , asc</param>
+        /// <returns>Task<PageModel<SysUser>></returns>
+        public async Task<PageModel<SysUser>> GetInfoList(string OrgCode, string userName, string userAccount, int? page, int? limit, string field, string order)
         {
             try
             {
-                var sql = $@"SELECT SU.USERID,
-       SU.ORGID,
+                #region 注释掉
+                //                var sql = $@"SELECT SU.USERID,
+                //       SU.ORGID,
+                //       O.NAMES ORGNAME,
+                //       SU.USERNAME,
+                //       SU.USERACCOUNT,
+                //       SU.MOBILE,
+                //       SU.TELEPHONE,
+                //       SU.EMAIL,
+                //       DECODE(SU.SEX, 0, '女', 1, '男') SexName,
+                //       SU.CREATETIME,
+                //       SU.REMARK,
+                //       E.EDUCATIONNAME,
+                //       P.PROFESSIONANAME,
+                //       (SELECT WM_CONCAT(R.NAMES) ne
+                //          FROM TB_SYS_USERROLE UR
+                //          LEFT JOIN TB_SYS_ROLE R
+                //            ON R.ROLEID = UR.ROLEID
+                //         WHERE UR.USERID = SU.USERID) ROLENAME
+                //  FROM TB_SYS_USER SU
+                //  LEFT JOIN TB_SYS_PROFESSIONA P
+                //    ON P.PROFESSIONAID = SU.PROFESSIONALID
+                //  LEFT JOIN TB_SYS_EDUCATION E
+                //    ON E.EDUCATIONID = SU.EDUCATIONID
+                //  LEFT JOIN TB_SYS_ORG O
+                //    ON O.ORGID = SU.ORGID
+                // WHERE SU.ISDELETE = 0 AND SU.ORGID={OrgID} AND SU.USERNAME LIKE'%{userName}%' AND SU.USERACCOUNT LIKE'%{userAccount}%'
+                //ORDER BY {field} {order}";
+                #endregion
+
+                var sql = $@"SELECT U.USERID,
+       U.ORGID,
        O.NAMES ORGNAME,
-       SU.USERNAME,
-       SU.USERACCOUNT,
-       SU.MOBILE,
-       SU.TELEPHONE,
-       SU.EMAIL,
-       DECODE(SU.SEX, 0, '女', 1, '男') SexName,
-       SU.CREATETIME,
-       SU.REMARK,
-       E.EDUCATIONNAME,
-       P.PROFESSIONANAME,
-       (SELECT WM_CONCAT(R.NAMES) ne
-          FROM TB_SYS_USERROLE UR
-          LEFT JOIN TB_SYS_ROLE R
-            ON R.ROLEID = UR.ROLEID
-         WHERE UR.USERID = SU.USERID) ROLENAME
-  FROM TB_SYS_USER SU
-  LEFT JOIN TB_SYS_PROFESSIONA P
-    ON P.PROFESSIONAID = SU.PROFESSIONALID
-  LEFT JOIN TB_SYS_EDUCATION E
-    ON E.EDUCATIONID = SU.EDUCATIONID
+       U.USERNAME,
+       U.USERACCOUNT,
+       U.USERPASSWORD,
+       U.MOBILE,
+       U.TELEPHONE,
+       U.PHOTO,
+       U.EDUCATIONID,
+       U.DEGREENO,
+       U.PROFESSIONALID,
+       U.EMAIL,
+       DECODE(U.SEX, 0, '女', 1, '男') SEXNAME,
+       U.PYCODE,
+       U.STATE,
+       U.ISDELETE,
+       U.CREATETIME,
+       U.LASTLOGINTIME,
+       U.ISDRIVER,
+       U.DRIVERNO,
+       U.TOKEN,
+       U.DEVICENO,
+       U.ADDRESS,
+       U.LASTERRTIME,
+       U.ERRORCOUNT,
+       U.REMARK,
+       U.IDCARD,
+       U.HOBBY,
+       D.DICNAME EDUCATIONNAME
+  FROM TB_SYS_USER U
   LEFT JOIN TB_SYS_ORG O
-    ON O.ORGID = SU.ORGID
- WHERE SU.ISDELETE = 0 AND SU.ORGID={OrgID} AND SU.USERNAME LIKE'%{userName}%' AND SU.USERACCOUNT LIKE'%{userAccount}%'
+    ON O.ORGID = U.ORGID
+   AND O.ISDELETE = 0
+   AND O.ISENABLED = 1
+  LEFT JOIN TB_SYS_DICCLASS D
+    ON D.DIC_ID = U.EDUCATIONID
+ WHERE U.ISDELETE = 0
+   AND O.CODE LIKE '%{OrgCode}'
+   AND (U.USERNAME LIKE '%{userName}%' OR U.USERACCOUNT LIKE '%{userAccount}%')
 ORDER BY {field} {order}";
                 var list = await _dal.SqlQueryAsync(Common.Helper.DBHelper.getDataPage(sql, page, limit));
                 int dataCount = await _dal.GetIntAsync(Common.Helper.DBHelper.getCountSql(sql));

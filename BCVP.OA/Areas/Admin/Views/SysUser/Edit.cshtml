@@ -1,7 +1,402 @@
 ﻿
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "12345用户管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="layui-fluid">
+    <div class="layui-card">
+        <form class="layui-form" action="" lay-filter="component-form-element">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs6 layui-col-md8" style="padding-right:0px;margin-right:0px;">
+                    <!-- 填充内容 -->
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-form-item">
 
-<h1>Edit</h1>
+                                <label class="layui-form-label">员工姓名：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="UserName" lay-verify="required|username" placeholder="员工真是姓名" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">登录账号：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="UserAccount" lay-verify="required|username" placeholder="系统登录账号，需要修改后期邮件申请" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">性&nbsp;&nbsp;&nbsp;&nbsp;别：</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="Sex" value="0" title="女&nbsp;&nbsp;&nbsp;&nbsp;" checked>
+                                    <input type="radio" name="Sex" value="1" title="男">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否婚姻：</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="IsMarry" value="0" title="未婚" checked>
+                                    <input type="radio" name="IsMarry" value="1" title="已婚">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-md4" style="padding-left:0px;margin-left:0px;">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-upload">
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" id="test-upload-normal-img" src="../../@Context.Request.Query["photo"]" style="width:150px;height:154px">
+                                    <p id="test-upload-demoText"></p>
+                                </div>
+                                <button type="button" class="layui-btn" id="test-upload-normal">请 选 择 用户 照片</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-header">基本信息</div>
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">兴趣爱好：</label>
+                    <div class="layui-input-block" id="Hobbys" name="Hobbys">
+                        <input type="checkbox" name="interest[write]" title="写作">
+                        <input type="checkbox" name="interest[read]" title="阅读">
+                        <input type="checkbox" name="interest[code]" title="代码" checked>
+                        <input type="checkbox" name="interest[dreaming]" title="音乐">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所在部门：</label>
+                    <div class="layui-input-block">
+                        <ul id="comOrgParent" name="comOrgParent" class="dtree" data-id="0"></ul>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份证号：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="IDCard" placeholder="请输入您的身份证号码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">手机号码：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Mobile" lay-verify="phones" placeholder="手机号后8位登录密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">办公座机：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="TelePhone" lay-verify="required" placeholder="办公座机号码，若有分机，写上分机号码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">最高学历：</label>
+                    <div class="layui-input-block">
+                        <select name="selectEducationId" id="selectEducationId" lay-filter="selectEducationId">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学位号码：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="DegreeNo" lay-verify="required" placeholder="获取最高学位号码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱地址：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Email" lay-verify="email" placeholder="请输入您经常使用的邮箱，方便及时联系到您。" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">驾驶证：</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="IsDriver" id="IsDriver" lay-skin="switch" lay-text="有|无" lay-filter="IsDriver"  checked>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">驾驶证号：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="DriverNo"  placeholder="驾驶证编号，非必填项" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">现在住址：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Address" placeholder="居住地址或者家庭住址" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注：</label>
+                    <div class="layui-input-block">
+                        <textarea name="Remark" placeholder="简单描述一下：工作内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-layout-admin">
+                <div class="layui-input-block">
+                    <div class="layui-footer" style="left: 0;">
+                        <button class="layui-btn" lay-submit="" lay-filter="component-form-element">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<link href="~/layuiadmin/layui_ext/dtree/dtree.css" rel="stylesheet" />
+<link href="~/layuiadmin/layui_ext/dtree/font/dtreefont.css" rel="stylesheet" />
+<script>
+ /**
+ * layui的模块初始化
+ */
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        dtree: '../layui_ext/dtree/dtree',
+        layselect: '../layui_ext/layselect/layselect'
+    }).use(['index', 'form', 'element', 'layer', 'dtree', 'layselect', 'upload'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , form = layui.form
+            , layer = layui.layer
+            , dtree = layui.dtree
+            , select = layui.layselect
+            , upload = layui.upload;
+        var v_photo = '@Context.Request.Query["photo"]';
+        var v_Dic_ID = '@Context.Request.Query["dic_ID"]';
+        var v_IsDriver = '@Context.Request.Query["isDriver"]';
+
+        if ('@Context.Request.Query["userID"]' != 0) {
+              $.get("@Url.Action("GetModuleInfo", "SysUser", new { area= "Admin" })?id=@Context.Request.Query["userID"]", function (objs) {
+                  //给表单赋值
+                  form.val("component-form-element", objs);
+            });
+        };
+
+         //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test-upload-normal'
+            , url: '@Url.Action("ImgUpload", "SysModule", new { area= "Admin" })' //上传接口
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#test-upload-normal-img').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                if (res != null) {
+                    v_photo = res.data.src;
+                }
+                /*var r = res;*/
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#test-upload-demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+   /**
+ * 页面加载完成后执行
+ */
+        $(function () {
+            //初始化
+            info();
+        })
+
+      //部门下拉数
+      var OrgDataTree=dtree.render({
+            elem: "#comOrgParent",  //绑定元素
+            width: "auto", // 指定树的宽度
+            selectCardHeight: "350",
+            method: 'GET',
+            dataType: 'json',
+            async: true,
+            line: true, // 有树线
+            initLevel: 1, //默认展开层级为1
+            //skin: 'layui-layer-lan',  //显示样式
+            skin: "layui",  // layui主题风格
+            spread: false, //节点展开状态
+            ficon: ["1", "4"],  // 设定一级图标样式。0表示方形加减图标，7表示文件图标
+            icon: ["0", "-1"], // 不设定二级图标样式。
+            dataFormat: "list",  //使用layui风格的数据格式
+            url: "@Url.Action("GetDataTreeList", "SysOrg",new { Area="Admin"})?selectOrgID=@Context.Request.Query["orgID"]", //异步接口
+            selectInitVal: "@Context.Request.Query["orgID"]", // 你可以在这里指定默认值
+            select: true//指定下拉树模式
+        });
+
+       //学历下拉数
+       select.render({
+            elem: "#selectEducationId",
+            url: '@Url.Action("GetSystemDicList", "SysUser", new { area= "Admin" })?DataType=2&SelectId=@Context.Request.Query["dic_ID"]',//归属类型
+            data: '',
+            type:'get',
+            select: '@Context.Request.Query["dic_ID"]',//确认默认项
+            success: function (data) {
+                if (data != null) {
+
+                }
+                //初始化完毕，data为绑定到组件上的数组集合
+            },
+            fail: function (e) {
+                //失败时回调
+            },
+            format: function (data) {
+                return data;                //对数据进行映射处理，需映射成：code,codeName,status,select,groupName,groupChildren
+            },
+            onselect: function (data) {
+                v_Dic_ID = data;
+                //点击选中时触发，data为选中的value
+            }
+        });
+
+        //加载兴趣爱好
+        function info() {
+        var div = $("#Hobbys");
+        //$("#Hobby")[0].reset();//清空表单
+        div.html("");
+            //进入/labelType/loadAllLabelType的方法，返回的objs是一个list集合，集合中的每个元素均为Label实体类(包含id和label两个属性)
+            $.get("@Url.Action("GetSystemDic", "SysUser", new { area= "Admin" })?DataType=1&SelectId=@Context.Request.Query["hobby"]", function (objs) {
+                var labelTypes = objs;
+                $.each(labelTypes, function (index, item) {
+                    if (item.select === 'true') { //默认第一个是被选中的，设置为checked="checked"
+                        div.append(' <input type="checkbox" name="Hobbys" value="' + item.code + '" title="' + item.codeName + '" checked>');
+                    } else {
+                        div.append('<input type="checkbox" name="Hobbys" value="' + item.code + '" title="' + item.codeName + '">');
+                    }
+                });
+                form.render("checkbox");
+            });
+        }
+
+        //监听指定开关
+        form.on('switch(IsDriver)', function (data) {
+            this.checked ? data.value = 1 : data.value = 0; //更改选中和未选中时，传动后台的值，此时选中传1，未选中传0。
+            v_IsDriver = data.value; //将该值传到后端即可使用。（如，直接在ajax中传值）
+        });
+
+        form.render(null, 'component-form-element');
+        element.render('breadcrumb', 'breadcrumb');
+
+        //提交表单
+        form.on('submit(component-form-element)', function (data) {
+            //获取checkbox[name='Hobby']的值
+            var arr = new Array();
+            $("input:checkbox[name='Hobbys']:checked").each(function (i) {
+                arr[i] = $(this).val();
+            });
+            data.field.Hobby = arr.join(",");//将数组合并成字符串
+            data.field.UserID = '@Context.Request.Query["userID"]';
+            data.field.OrgID = data.field.comOrgParent_select_nodeId;
+            data.field.EducationId = data.field.selectEducationId;
+            if (data.field.IsDriver == "on") {
+                data.field.IsDriver = "1";
+            } else { data.field.IsDriver = "0"; }
+            data.field.Photo= v_photo;
+            data.field.IsDriver = v_IsDriver;
+            data.field.UserPassword = "123456";
+            $.ajax({
+            type: "POST",
+            url: "@Url.Action("InsertOrEdit")",
+            data: { Info: data.field},
+                dataType: 'json',
+                success: function (res)
+                {
+                    if (res.count> 0)
+                    {
+                        layer.alert('保存成功', { icon: 6 }, function () {
+                           //刷新父
+                            window.parent.location.reload();
+                           // 获得frame索引
+                           var index = parent.layer.getFrameIndex(window.name);
+                           //关闭当前frame
+                           parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.msg('菜单名称已经存在，修改失败！', { icon: 5 });
+                    }
+                }
+            });
+            return false;
+
+            //$.post("admin.php", { data: data.field }, function (res) {
+            //    if (res.code == 1) {
+            //        layer.msg(res.msg, { time: 1800, icon: 1 }, function () {
+            //            location.href = res.url;
+            //        });
+            //    } else {
+            //        layer.msg(res.msg, { time: 1800, icon: 2 });
+            //    }
+            //}, 'json');
+        });
+
+        //自定义验证
+        form.verify({
+            username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字';
+                }
+
+                //如果不想自动弹出默认提示框，可以直接返回 true，这时你可以通过其他任意方式提示（v2.5.7 新增）
+                if (value === 'xxx') {
+                    alert('用户名不能为敏感词');
+                    return true;
+                }
+            }
+
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            , pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+            , title: function (value) {
+                if (value.length < 5) {
+                    return '标题至少得5个字符啊';
+                }
+            },
+            pwd: [
+                /^(\w){6,20}$/, '只能输入6-20个字母、数字、下划线'
+            ],
+            phones: [
+                /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/, '您的输入有误，请重新输入(中国11位手机号)'
+            ],
+            truename: [
+                /^[\u4e00-\u9fa5]{2,4}$/, '您的输入有误，请输入2-4位中文'
+            ],
+            cardId: [
+                /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, '请输入正确的身份证号'
+            ],
+            idCar: function (value, item) { //value：表单的值、item：表单的DOM对象
+                var exp = /(^\d{15}$)|(^\d{17}(x|X|\d)$)/;
+                if (value && !exp.test(value)) {
+                    return '请输入正确的身份证';
+                }
+            }
+        });
+    });
+</script>
+
+
 

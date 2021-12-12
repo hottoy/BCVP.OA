@@ -5,33 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using static BCVP.Model.Enums;
 
-namespace BCVP.Model
+namespace BCVP.Model.ViewModels
 {
     /// <summary>
-    /// layui Table返回字段统一格式
+    /// response返回类
     /// </summary>
-    public class JsonResponse
+    public class DTreeResponse
     {
         /// <summary>
-        /// 返回代码 0表示成功 1表示失败
+        /// 状态码 200操作成功
         /// </summary>
-        public ResponseCode code { get; set; } = ResponseCode.Success;
+        public string code { get; set; }
+
         /// <summary>
-        /// 返回信息
+        /// 信息标识
         /// </summary>
         public string msg { get; set; }
+
         /// <summary>
-        /// 泛型数据
+        /// 数据集合
         /// </summary>
         public object data { get; set; }
-        /// <summary>
-        /// 行数
-        /// </summary>
-        public int count { get; set; }
-        /// <summary>
-        /// 重定向地址
-        /// </summary>
-        public string redirect { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public object status { get; set; }
     }
 }

@@ -17,9 +17,15 @@ namespace BCVP.IServices.IOAServices
         /// <summary>
         /// 根据机构ID获取对应的用户信息
         /// </summary>
-        /// <param name="OrgID">机构OrgID</param>
-        /// <returns></returns>
-        Task<PageModel<SysUser>> GetInfoList(int OrgID, string userName, string userAccount, int? page, int? limit, string field, string order);
+        /// <param name="OrgCode">机构编码</param>
+        /// <param name="userName">用户名</param>
+        /// <param name="userAccount">登录账号</param>
+        /// <param name="page">每页显示条数</param>
+        /// <param name="limit">页面</param>
+        /// <param name="field">排序字段</param>
+        /// <param name="order">desc , asc</param>
+        /// <returns>Task<PageModel<SysUser>></returns>
+        Task<PageModel<SysUser>> GetInfoList(string OrgCode, string userName, string userAccount, int? page, int? limit, string field, string order);
 
         /// <summary>
         /// 添加或修改

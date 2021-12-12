@@ -133,7 +133,7 @@
                         $(obj.elem).children('.layui-tree-entry').addClass('ew-tree-click');
                         oID = obj.data.id;
                         insTb.reload({
-                            where: { orgID: obj.data.id },
+                            where: { OrgCode: obj.data.code },
                             page: { curr: 1 },
                             url: '@Url.Action("GetData")'
                         });
@@ -171,8 +171,6 @@
                 });
          }
 
-
-
         /* 渲染表格 */
         var insTb = table.render({
             elem: '#organizationUserTable',
@@ -192,8 +190,10 @@
                 { field: 'OrgName', title: '机构', width: 150 },
                 { field: 'SexName', title: '性别', width: 60 },
                 { field: 'EducationName', title: '学历', width: 80 },
-                { field: 'ProfessionaName', title: '职称', width: 80 },
-
+                /*{ field: 'ProfessionaName', title: '职称', width: 80 },*/
+                { field: 'Photo', title: '头像', hide: true },
+                { field: 'Hobby', title: '兴趣爱好', hide: true },
+                { field:'IsDriver',title:'是否驾驶员',hide:true},
                 { field: 'Mobile', title: '手机号码', width: 120 , sort: true },
                 {
                     field: 'CreateTime', title: '创建时间', width: 160 , templet: function (d) {
@@ -231,15 +231,15 @@
                 $("#userName").val(uName);
                 $("#userAccount").val(uAccount);
             } else if (obj.event === 'AddUser') {//添加用户
-                layer.open({
-                    type: 2,
-                    title: '添加用户',
-                    area: ['800px', '650px'],
-                    fixed: false,
-                    maxmin: true,
-                    content: ['@Url.Action("Edit")?userID=0&orgID=' + oID, 'yes'] //iframe的url，no代表不显示滚动条
-
-                });
+                var p = 'images/imgLogo/touxiang.jpg';
+                         layer.open({
+                                type: 2,
+                                title: '新增用户',
+                                area: ['650px', '450px'],
+                                fixed: false,
+                                maxmin: true,
+                               content: ['@Url.Action("Edit")?userID=0&dicID=0&isDriver=0&hobby=0&photo='+p+'&orgID=' + oID, 'yes'] //iframe的url，no代表不显示滚动条
+                            });
             }
             else if (obj.event === 'UpdateUser') {//修改用户
                 var checkRows = table.checkStatus('organizationUserTable');
@@ -256,7 +256,7 @@
                     area: ['800px', '650px'],
                     fixed: false,
                     maxmin: true,
-                    content: ['@Url.Action("Edit")?userID=' + checkRows.data[0].UserID + '&orgID=' + oID, 'yes'] //iframe的url，no代表不显示滚动条
+                    content: ['@Url.Action("Edit")?userID=' + checkRows.data[0].UserID + '&dic_ID=' + checkRows.data[0].EducationId + '&isDriver=' + checkRows.data[0].IsDriver + '&hobby=' + checkRows.data[0].Hobby + '&photo=' + checkRows.data[0].Photo + '&orgID=' + checkRows.data[0].OrgID, 'yes'] //iframe的url，no代表不显示滚动条
                 });
             }
             else if (obj.event === "rightInfo") {//用户授权

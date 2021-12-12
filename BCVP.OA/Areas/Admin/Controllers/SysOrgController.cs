@@ -95,45 +95,52 @@ namespace BCVP.OA.Areas.Admin.Controllers
         }
 
 
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public async Task<ActionResult> Edit()
         {
+            await Task.Run(() => { });
             return View();
         }
-
-        // POST: SysOrgController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpGet]
+        public async Task<ActionResult> Test()
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: SysOrgController/Delete/5
-        public ActionResult Delete(int id)
-        {
+            await Task.Run(() => { });
             return View();
         }
-
-        // POST: SysOrgController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpGet]
+        public async Task<JsonResult> GetDataTreeList(int selectOrgID)
         {
-            try
+            DTreeResponse result = new DTreeResponse();
+            List<TreeEntity> tree = new List<TreeEntity>();
+            var info = await _sysOrgServices.SqlQueryAsync($@"SELECT O.ORGID,
+                                                                           O.PARENTID,
+                                                                           O.CODE,
+                                                                           O.NAMES,
+                                                                           O.FULLNAME,
+                                                                           O.PYCODE,
+                                                                           O.ATTRIBUT,
+                                                                           O.SCHEMAID,
+                                                                           O.ISENABLED,
+                                                                           O.ISDELETE,
+                                                                           O.ORDERSORT,
+                                                                           O.REMARK,
+                                                                           O.CREATEID,
+                                                                           O.CREATEBY,
+                                                                           O.CREATETIME,
+                                                                           O.MODIFYID,
+                                                                           O.MODIFYBY,
+                                                                           O.MODIFYTIME
+                                                                      FROM TB_SYS_ORG O
+                                                                     WHERE O.ISENABLED = 1
+                                                                       AND O.ISDELETE = 0
+                                                                     ORDER BY O.CODE ASC, O.ORDERSORT ASC");
+            info.ForEach(s =>
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                tree.Add(new TreeEntity { id = s.OrgID, title = s.Names, last = 0, parentId = s.ParentID, spread = (s.Code.Length == 4 ? true : false), OrgCode = s.Code, checkArr = "0",@checked=(s.OrgID==selectOrgID?true:false) });
+            });
+            result.status = new { code = "200", message = "操作成功" };
+            result.data = tree;
+            return Json(result);
         }
     }
 }

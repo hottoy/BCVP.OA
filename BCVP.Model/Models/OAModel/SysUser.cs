@@ -28,43 +28,43 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 用户姓名
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = false)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = false)]
         public string UserName { get; set; }
 
         /// <summary>
         /// 证件号码，身份证号码可空
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 128, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 128, IsNullable = true)]
         public string IDCard { get; set; }
 
         /// <summary>
         /// 登录账号
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string UserAccount { get; set; }
 
         /// <summary>
         /// 登录密码
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string UserPassword { get; set; }
 
         /// <summary>
         /// 手机号码
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string Mobile { get; set; }
 
         /// <summary>
         /// 座机或者分机号码
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string TelePhone { get; set; }
 
         /// <summary>
         /// 图片地址
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string Photo { get; set; }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 学位号码
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string DegreeNo { get; set; }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 邮箱地址
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string Email { get; set; }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 姓名拼音码
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string PyCode { get; set; }
 
         /// <summary>
@@ -136,25 +136,25 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 驾驶员编号
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string DriverNo { get; set; }
 
         /// <summary>
         /// 手机登录加密
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 655, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 655, IsNullable = true)]
         public string Token { get; set; }
 
         /// <summary>
         /// 设备编号或者登录IP
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string DeviceNo { get; set; }
 
         /// <summary>
         /// 地址
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 255, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 255, IsNullable = true)]
         public string Address { get; set; }
 
 
@@ -171,8 +171,19 @@ namespace BCVP.Model.Models.OAModel
         /// <summary>
         /// 备注
         /// </summary>
-        [SugarColumn(ColumnDataType = "varchar2", Length = 500, IsNullable = true)]
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 500, IsNullable = true)]
         public string Remark { get; set; }
 
+        /// <summary>
+        /// 是否已婚
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public int IsMarry { get; set; } = 0;
+
+        /// <summary>
+        /// 兴趣爱好
+        /// </summary>
+        [SugarColumn(ColumnDataType = "NVARCHAR2", Length = 500, IsNullable = true)]
+        public string Hobby { get; set; }
     }
 }

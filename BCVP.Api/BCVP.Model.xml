@@ -621,6 +621,56 @@
             修改时间
             </summary>
         </member>
+        <member name="T:BCVP.Model.Models.OAModel.SysDicClass">
+            <summary>
+            系统异常信息
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.Dic_ID">
+            <summary>
+            主键 用户登录日志
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.DataType">
+            <summary>
+            字典分类1:兴趣爱好；2：学历
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.dicName">
+            <summary>
+            字典名称
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.dicCode">
+            <summary>
+            字典编码
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.IsEnabled">
+            <summary>
+            是否激活
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.IsDelete">
+             <summary>
+            获取或设置是否禁用，逻辑上的删除，非物理删除
+             </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.OrderSort">
+            <summary>
+            排序码
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysDicClass.CreateTimeString">
+            <summary>
+            返回创建时间
+            </summary>
+        </member>
         <member name="T:BCVP.Model.Models.OAModel.SysLogException">
             <summary>
             系统异常信息
@@ -1234,6 +1284,16 @@
         <member name="P:BCVP.Model.Models.OAModel.SysUser.Remark">
             <summary>
             备注
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUser.IsMarry">
+            <summary>
+            是否已婚
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.Models.OAModel.SysUser.Hobby">
+            <summary>
+            兴趣爱好
             </summary>
         </member>
         <member name="P:BCVP.Model.Models.OAModel.SysUser.RoleName">
@@ -2455,6 +2515,31 @@
             
             </summary>
         </member>
+        <member name="T:BCVP.Model.ViewModels.DTreeResponse">
+            <summary>
+            response返回类
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.DTreeResponse.code">
+            <summary>
+            状态码 200操作成功
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.DTreeResponse.msg">
+            <summary>
+            信息标识
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.DTreeResponse.data">
+            <summary>
+            数据集合
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.DTreeResponse.status">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:BCVP.Model.ViewModels.GuestbookViewModels">
             <summary>
             留言信息展示类
@@ -3031,6 +3116,76 @@
         <member name="P:BCVP.Model.ViewModels.TopgbViewModels.btitle">
             <summary>博客标题
             
+            </summary>
+        </member>
+        <member name="T:BCVP.Model.ViewModels.TreeEntity">
+            <summary>
+            树形菜单返回统一格式
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.id">
+            <summary>
+            节点唯一索引值
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.title">
+            <summary>
+            节点标题
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.initLevel">
+            <summary>
+            默认展开层级，当该值大于level时，则会展开树的节点，直到不大于当前待展开节点的level
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.last">
+            <summary>
+            是否是最后一个节点
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.parentId">
+            <summary>
+            父级ID
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.OrgCode">
+            <summary>
+            机构树编码
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.basicData">
+            <summary>
+            自定义
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.field">
+            <summary>
+            节点字段名
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.href">
+            <summary>
+            点击节点弹出新窗口对应的url
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.spread">
+            <summary>
+            节点是否初始展开
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.checked">
+            <summary>
+            节点是否初始为选中状态
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.disabled">
+            <summary>
+            节点是否为禁用状态
+            </summary>
+        </member>
+        <member name="P:BCVP.Model.ViewModels.TreeEntity.children">
+            <summary>
+            子节点
             </summary>
         </member>
         <member name="P:BCVP.Model.ViewModels.treeView.Id">
